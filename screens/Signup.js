@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useContext} from 'react';
 import {  View, Text, TextInput,ScrollView } from 'react-native'
 import UserInput from '../components/auth/UserInput';
 import SubmitButton from '../components/auth/SubmitButton';
@@ -7,6 +7,7 @@ import CircleLogo from '../components/auth/CircleLogo'
 //con esto scrollea cuando te aparece aparece el teclado
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import {API} from '../config'
+import { AuthContext } from '../context/auth';
 
 const Signup = ({navigation}) => {
 
@@ -14,6 +15,7 @@ const Signup = ({navigation}) => {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [loading,setLoading] = useState(false)
+    const [state,setState] = useContext(AuthContext)
 
 
     const handleSubmit = async() => {
@@ -39,9 +41,11 @@ const Signup = ({navigation}) => {
                 setLoading(false)
             }else{
 
+                setState(data)
                 setLoading(false)
                 console.log('/signin succes',data)
                 alert('signup success')
+                navigation.navigate("Home")
             }
 
           

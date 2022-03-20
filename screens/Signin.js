@@ -16,6 +16,7 @@ const Signin = ({navigation}) => {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const [loading,setLoading] = useState(false)
+    const [state,setState] = useContext(AuthContext)
 
 
     const handleSubmit = async() => {
@@ -40,10 +41,10 @@ const Signin = ({navigation}) => {
               setLoading(false)
             }else{
 
-
+              setState(data)
               await AsyncStorage.setItem('@auth',JSON.stringify(data))
-              console.log('/signin succes',data)
-              alert('signup success')
+
+              navigation.navigate("Home")
             }
 
       
@@ -83,7 +84,7 @@ const Signin = ({navigation}) => {
 
         <SubmitButton
         
-        title="Registrar" handleSubmit={handleSubmit} loading={loading} />
+        title="Iniciar sesion" handleSubmit={handleSubmit} loading={loading} />
 
 <Text 
         style={{textAlign:'center'}}
