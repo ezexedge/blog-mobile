@@ -6,6 +6,7 @@ import axios from 'axios'
 import CircleLogo from '../components/auth/CircleLogo'
 //con esto scrollea cuando te aparece aparece el teclado
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {API} from '../config'
 
 const Signup = ({navigation}) => {
 
@@ -27,14 +28,23 @@ const Signup = ({navigation}) => {
         }
         try{
 
-            const {data} = await axios.post("http://localhost:8000/api/signup",{
+            const {data} = await axios.post(`${API}/signup`,{
                 name,
                 email,
                 password
             })
 
-            console.log('/signin succes',data)
-            alert('signup success')
+            if(data && data.error){
+                alert(data.error)
+                setLoading(false)
+            }else{
+
+                setLoading(false)
+                console.log('/signin succes',data)
+                alert('signup success')
+            }
+
+          
 
         }catch(error){
 

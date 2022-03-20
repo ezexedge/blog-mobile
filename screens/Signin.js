@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useContext} from 'react';
 import {  View, Text, TextInput,ScrollView } from 'react-native'
 import UserInput from '../components/auth/UserInput';
 import SubmitButton from '../components/auth/SubmitButton';
@@ -6,6 +6,10 @@ import axios from 'axios'
 import CircleLogo from '../components/auth/CircleLogo'
 //con esto scrollea cuando te aparece aparece el teclado
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {API} from '../config'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../context/auth';
+
 
 const Signin = ({navigation}) => {
 
@@ -18,7 +22,7 @@ const Signin = ({navigation}) => {
 
         setLoading(true)
 
-        if(!name || !email || !password){
+        if( !email || !password){
             alert('tenes que llenar todos los campos')
             setLoading(false)
 
@@ -26,13 +30,23 @@ const Signin = ({navigation}) => {
         }
         try{
 
-            const {data} = await axios.post("http://localhost:8000/api/signin",{
+            const {data} = await axios.post(`${API}/signin`,{
                 email,
                 password
             })
 
-            console.log('/signin succes',data)
-            alert('signup success')
+            if(data && data.error){
+              alert(data.error)
+              setLoading(false)
+            }else{
+
+
+              await AsyncStorage.setItem('@auth',JSON.stringify(data))
+              console.log('/signin succes',data)
+              alert('signup success')
+            }
+
+      
 
         }catch(error){
 
@@ -40,6 +54,15 @@ const Signin = ({navigation}) => {
 
         }
     }
+
+
+    const loadFromAsyncStorage = async() => {
+      let data = await AsyncStorage.getItem('@auth')
+      console.log('aca el localstorage',data)
+    }
+
+
+    loadFromAsyncStorage()
 
     return ( 
         <KeyboardAwareScrollView contentContainerStyle={{ flex: 1, justifyContent: "center" }}>
