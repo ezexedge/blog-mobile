@@ -16,12 +16,15 @@ const [state,setState] = useContext(AuthContext)
     return ( 
         <View
         style={{
-            flex:1,
-            justifyContent: 'space-between'
+            flex:1
         }}
         >
-            <Text>{JSON.stringify(state,null,4)}</Text>
+            <Text style={{textAlign:'center',marginTop:'10px',fontSize:'30px'}}>
+                Home
+            </Text>
+            <View style={{flex:1,justifyContent: 'flex-end'}}>
             <FooterTabs/>
+            </View>
         </View>
      );
 }

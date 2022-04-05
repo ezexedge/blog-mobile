@@ -8,6 +8,9 @@ import Signin from '../../screens/Signin'
 import Home from '../../screens/Home'
 import { AuthContext } from '../../context/auth';
 import HeaderTabs from './HeaderTabs';
+import Account from '../../screens/Account';
+import Post from '../../screens/Post';
+import Links from '../../screens/Links';
 
 const Stack = createNativeStackNavigator()
 
@@ -20,18 +23,38 @@ export default function ScreensNav() {
     const authenticated = state && state.token !== "" && state.user !== null
 
 return(
-      <Stack.Navigator initialRouteName="Home" 
+      <Stack.Navigator initialRouteName="Account" 
 
       >
 
           {authenticated  ?  (
-              
-                        <Stack.Screen name="Home" component={Home}
+              <>
+                  <Stack.Screen name="Home" component={Home}
                         options={{
                             title:"Es un ejemplo",
                             headerRight: () => <HeaderTabs/>
                         }}
                         />
+
+<Stack.Screen name="Links" component={Links}
+                      
+                        />
+
+<Stack.Screen name="Post" component={Post}
+                      
+                        />
+
+
+
+<Stack.Screen name="Account" component={Account}
+                          options={{
+                            headerBackTitle:'volver atras'
+                             }} 
+                        />
+
+
+              </>
+                    
 
                         )  : (
               <>
