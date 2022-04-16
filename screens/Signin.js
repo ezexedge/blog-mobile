@@ -31,11 +31,13 @@ const Signin = ({navigation}) => {
         }
         try{
 
-            const {data} = await axios.post(`${API}/signin`,{
+            const {data} = await axios.post(`http://localhost:8000/api/signin`,{
                 email,
                 password
             })
 
+
+            console.log('dsssdd',data)
             if(data && data.error){
               alert(data.error)
               setLoading(false)
@@ -96,6 +98,7 @@ const Signin = ({navigation}) => {
 
 
         <Text 
+        onPress={()=> navigation.navigate("ForgotPassword")}
         style={{textAlign:'center',color:'orange',margin:10}}
         >
           Forgot password?

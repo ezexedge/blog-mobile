@@ -25,6 +25,9 @@ const Account = ({navigation}) => {
     const [state,setState] = useContext(AuthContext)
     const [uploadImage,setUploadImage] = useState('')
 
+
+    
+
     useEffect(()=>{
 
         if(state){
@@ -33,45 +36,41 @@ const Account = ({navigation}) => {
             setName(name)
             setEmail(email)
             setRole(role)
+            setImage(image)
         }
 
     },[state])
 
 
+    console.log('sssssdd',state)
+
     const handleSubmit = async() => {
 
         setLoading(true)
 
-        if( !email || !password){
-            alert('tenes que llenar todos los campos')
-            setLoading(false)
-
-            return
-        }
+      
         try{
 
-            const {data} = await axios.post(`${API}/signin`,{
-                email,
-                password
-            })
+          const {data} = await axios.post('/update-password',{
+            password: password
+          })
 
-            if(data && data.error){
-              alert(data.error)
-              setLoading(false)
-            }else{
-
-              setState(data)
-              await AsyncStorage.setItem('@auth',JSON.stringify(data))
-
-              navigation.navigate("Home")
-            }
+          console.log('success updata')
+          if(data.error){
+            console.log('error',data.error)
+            setLoading(false)
+          }else{
+            console.log('success updata')
+            setPassword('')
+            setLoading(false)
+          }
 
       
 
         }catch(error){
 
-            console.log('error signup',error)
-
+            console.log('password update failed',error)
+           setLoading(false)
         }
     }
 
@@ -101,6 +100,25 @@ const Account = ({navigation}) => {
       let base64Image = `data:image/jpg;base64,${pickerResult.base64}`
       setUploadImage(base64Image)
 
+
+
+      let token = state && state.token ?  state.token : ""
+      const {data} = await axios.post(`${API}/upload-image`,{
+        image:  base64Image
+    },{
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    console.log('upload image => ', data)
+
+    const as = JSON.parse(await AsyncStorage.getItem('@auth'))
+    as.user = data
+    await AsyncStorage.setItem('@auth',JSON.stringify(as))
+    setState({...state,user:data})
+    setImage(data.image)
+    alert('Profile saved image')
 
     }
 
@@ -181,7 +199,7 @@ const Account = ({navigation}) => {
           {role}
         </Text>
 
-        <UserInput  name="password" value={password} setValue={setPassword}  autoCompleteType="password" secureTextEntry={true}/>
+        <UserInput  name="password"  value={password} setValue={setPassword}  autoCompleteType="password" secureTextEntry={true}/>
 
         <SubmitButton
         
